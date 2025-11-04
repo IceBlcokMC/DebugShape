@@ -1,14 +1,14 @@
 #include "DebugShapeTest.h"
 
-#include "debug_shape/DebugArrow.h"
-#include "debug_shape/DebugBox.h"
-#include "debug_shape/DebugCircle.h"
-#include "debug_shape/DebugLine.h"
-#include "debug_shape/DebugSphere.h"
-#include "debug_shape/DebugText.h"
-#include "debug_shape/IDebugShape.h"
+#include "debug_shape/api/shape/IDebugArrow.h"
+#include "debug_shape/api/shape/IDebugBox.h"
+#include "debug_shape/api/shape/IDebugCircle.h"
+#include "debug_shape/api/shape/IDebugLine.h"
+#include "debug_shape/api/shape/IDebugShape.h"
+#include "debug_shape/api/shape/IDebugSphere.h"
+#include "debug_shape/api/shape/IDebugText.h"
 
-#include "debug_shape/extension/BoundsBox.h"
+#include "debug_shape/api/shape/extension/IBoundsBox.h"
 
 
 #include "ll/api/Expected.h"
@@ -32,8 +32,8 @@
 namespace tests {
 
 
-std::vector<std::unique_ptr<debug_shape::IDrawerInterface>> gShapes;
-void addShape(std::unique_ptr<debug_shape::IDrawerInterface> shape) { gShapes.push_back(std::move(shape)); }
+std::vector<std::unique_ptr<debug_shape::IDebugShape>> gShapes;
+void addShape(std::unique_ptr<debug_shape::IDebugShape> shape) { gShapes.push_back(std::move(shape)); }
 
 #define CHECK_ORIGIN(ORI)                                                                                              \
     if (ORI.getOriginType() != CommandOriginType::Player) {                                                            \
@@ -77,7 +77,7 @@ void DebugShapeTest::setup() {
         .required("text")
         .execute([](CommandOrigin const& origin, CommandOutput& output, TextParam const& param) {
             auto pos   = RESOLVE_POS(origin, param.position);
-            auto shape = std::make_unique<debug_shape::DebugText>(pos, param.text);
+            auto shape = debug_shape::IDebugText::create(pos, param.text);
             shape->draw();
             addShape(std::move(shape));
             output.success("Added text shape");
@@ -90,7 +90,7 @@ void DebugShapeTest::setup() {
         .optional("scale")
         .execute([](CommandOrigin const& origin, CommandOutput& output, SphereParam const& param) {
             auto pos   = RESOLVE_POS(origin, param.position);
-            auto shape = std::make_unique<debug_shape::DebugSphere>(pos);
+            auto shape = debug_shape::IDebugSphere::create(pos);
             shape->setScale(param.scale);
             shape->draw();
             addShape(std::move(shape));
@@ -102,7 +102,7 @@ void DebugShapeTest::setup() {
         [](CommandOrigin const& origin, CommandOutput& output, LineParam const& param) {
             auto start = RESOLVE_POS(origin, param.start);
             auto end   = RESOLVE_POS(origin, param.end);
-            auto shape = std::make_unique<debug_shape::DebugLine>(start, end);
+            auto shape = debug_shape::IDebugLine::create(start, end);
             shape->draw();
             addShape(std::move(shape));
             output.success("Added line shape");
@@ -116,7 +116,7 @@ void DebugShapeTest::setup() {
         .optional("scale")
         .execute([](CommandOrigin const& origin, CommandOutput& output, SphereParam const& param) {
             auto pos   = RESOLVE_POS(origin, param.position);
-            auto shape = std::make_unique<debug_shape::DebugCircle>(pos);
+            auto shape = debug_shape::IDebugCircle::create(pos);
             shape->setScale(param.scale);
             shape->draw();
             addShape(std::move(shape));
@@ -128,7 +128,7 @@ void DebugShapeTest::setup() {
         [](CommandOrigin const& origin, CommandOutput& output, LineParam const& param) {
             auto start = RESOLVE_POS(origin, param.start);
             auto end   = RESOLVE_POS(origin, param.end);
-            auto shape = std::make_unique<debug_shape::DebugBox>(start);
+            auto shape = debug_shape::IDebugBox::create(start);
             shape->setBound(end);
             shape->draw();
             addShape(std::move(shape));
@@ -141,7 +141,7 @@ void DebugShapeTest::setup() {
         [](CommandOrigin const& origin, CommandOutput& output, LineParam const& param) {
             auto start = RESOLVE_POS(origin, param.start);
             auto end   = RESOLVE_POS(origin, param.end);
-            auto shape = std::make_unique<debug_shape::DebugArrow>(start, end);
+            auto shape = debug_shape::IDebugArrow::create(start, end);
             shape->draw();
             addShape(std::move(shape));
             output.success("Added arrow shape");
@@ -157,9 +157,10 @@ void DebugShapeTest::setup() {
         .execute([](CommandOrigin const& origin, CommandOutput& output, LineParam const& param) {
             auto start = RESOLVE_POS(origin, param.start);
             auto end   = RESOLVE_POS(origin, param.end);
-            auto shape = std::make_unique<debug_shape::extension::BoundsBox>(AABB{start, end});
+            auto shape = debug_shape::extension::IBoundsBox::create(AABB{start, end});
             shape->draw();
-            addShape(std::move(shape));
+            static std::vector<std::unique_ptr<debug_shape::extension::IBoundsBox>> gBoundsBox;
+            gBoundsBox.emplace_back(std::move(shape));
             output.success("Added bounds box shape");
         });
 }
