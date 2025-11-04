@@ -18,9 +18,8 @@ add_requires("debug_shape 0.1.0")
 #include "debug_shape/DebugShape.h"
 
 void enable() {
-    auto shape = std::make_unique<debug_shape::DebugShape>();
+    auto shape = debug_shape::IDebugText::create(Vec3{0,92,0}, "foo");
     shape->draw();
-    shape->remove();
 }
 ```
 
@@ -43,7 +42,8 @@ xmake f --test=y
 
 4. Use the **/shape** command for a quick experience.
 
-> Since this is test code, only basic demonstrations are provided. For more attributes (color, scaling, etc.), please use the API.
+> Since this is test code, only basic demonstrations are provided. For more attributes (color, scaling, etc.), please
+> use the API.
 
 ```log
 ? shape
