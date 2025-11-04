@@ -6,6 +6,11 @@
 #include <mc/deps/core/utility/AutomaticID.h>
 
 namespace debug_shape {
+
+std::unique_ptr<extension::IBoundsBox> extension::IBoundsBox::create(AABB const& bounds, mce::Color const& color) {
+    return std::make_unique<detail::extension::BoundsBoxImpl>(bounds, color);
+}
+
 namespace detail ::extension {
 
 struct BoundsBoxImpl::Impl {
