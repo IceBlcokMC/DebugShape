@@ -2,7 +2,6 @@
 
 #include "debug_shape/api/shape/IDebugLine.h"
 #include "debug_shape/detail/DebugShapeDrawerImpl.h"
-#include "legacy/include/debug_shape/DebugShapeDrawer.h"
 
 #include <mc/deps/core/utility/AutomaticID.h>
 
