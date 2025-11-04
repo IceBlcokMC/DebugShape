@@ -3,7 +3,7 @@
 #include "debug_shape/Macro.h"
 
 #include "mc/_HeaderOutputPredefine.h"
-#include "mc/network/packet/ServerScriptDebugDrawerPacket.h"
+#include "mc/network/packet/DebugDrawerPacket.h"
 
 #include <vector>
 
@@ -11,7 +11,7 @@ class Player;
 
 namespace debug_shape {
 
-using ShapeDrawerPacket = ScriptModuleDebugUtilities::ServerScriptDebugDrawerPacket;
+using ShapeDrawerPacket = ::DebugDrawerPacket;
 
 class DebugShapeDrawer {
     static void implDrawer(
