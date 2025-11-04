@@ -55,21 +55,25 @@ void DebugShapeImpl::setDimensionId(DimensionType d) { payload_.mDimensionId = d
 
 void DebugShapeImpl::draw() const { DebugShapeDrawerImpl::getInstance().drawShape(this); }
 
-void DebugShapeImpl::draw(Player& player) const {}
+void DebugShapeImpl::draw(Player& player) const { DebugShapeDrawerImpl::getInstance().drawShape(this, player); }
 
-void DebugShapeImpl::draw(DimensionType dimension) const {}
+void DebugShapeImpl::draw(DimensionType dimension) const {
+    // TODO: impl
+}
 
-void DebugShapeImpl::remove() const {}
+void DebugShapeImpl::remove() const { DebugShapeDrawerImpl::getInstance().removeShape(this); }
 
-void DebugShapeImpl::remove(Player& player) const {}
+void DebugShapeImpl::remove(Player& player) const { DebugShapeDrawerImpl::getInstance().removeShape(this, player); }
 
-void DebugShapeImpl::remove(DimensionType dimension) const {}
+void DebugShapeImpl::remove(DimensionType dimension) const {
+    // TODO: impl
+}
 
-void DebugShapeImpl::update() const {}
+void DebugShapeImpl::update() const { draw(); }
 
-void DebugShapeImpl::update(Player& player) const {}
+void DebugShapeImpl::update(Player& player) const { draw(player); }
 
-void DebugShapeImpl::update(DimensionType dimension) const {}
+void DebugShapeImpl::update(DimensionType dimension) const { draw(dimension); }
 
 
 } // namespace debug_shape::detail

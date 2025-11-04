@@ -8,6 +8,7 @@ namespace debug_shape::detail {
 class DebugShapeImpl : public virtual IDebugShape {
 protected:
     ShapeDataPayload payload_{};
+    friend class DebugShapeDrawerImpl;
 
 public:
     DS_DISABLE_COPY(DebugShapeImpl);
