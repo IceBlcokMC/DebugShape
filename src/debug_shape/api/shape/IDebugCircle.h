@@ -1,17 +1,18 @@
 #pragma once
-#include "debug_shape/DebugShape.h"
-
+#include "IDebugShape.h"
 
 namespace debug_shape {
+
 
 /**
  * 调试圈
  * @see
  * https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/debug-utilities/debugcircle?view=minecraft-bedrock-experimental
  */
-class DebugCircle : public DebugShape {
+class IDebugCircle : public virtual IDebugShape {
 public:
-    DSNDAPI explicit DebugCircle(Vec3 const& center);
+    DSNDAPI static std::unique_ptr<IDebugCircle> create(Vec3 const& center);
 };
+
 
 } // namespace debug_shape
