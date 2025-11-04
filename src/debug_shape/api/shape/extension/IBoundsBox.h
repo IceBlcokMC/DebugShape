@@ -9,7 +9,8 @@ namespace debug_shape::extension {
 
 class IBoundsBox : public IDrawer {
 public:
-    DSNDAPI std::unique_ptr<IBoundsBox> create(AABB const& bounds, mce::Color const& color = mce::Color::WHITE());
+    DSNDAPI static std::unique_ptr<IBoundsBox>
+    create(AABB const& bounds, mce::Color const& color = mce::Color::WHITE());
 
     virtual void setBounds(AABB const& bounds) = 0;
 
