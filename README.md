@@ -15,9 +15,9 @@ add_requires("debug_shape 0.1.0")
 ```
 
 ```cpp
-#include "debug_shape/DebugShape.h"
+#include "debug_shape/api/shape/IDebugText.h"
 
-void enable() {
+void MyMod::enable() {
     auto shape = debug_shape::IDebugText::create(Vec3{0,92,0}, "foo");
     shape->draw();
 }

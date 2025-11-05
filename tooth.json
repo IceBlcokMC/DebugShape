@@ -2,7 +2,7 @@
     "format_version": 3,
     "format_uuid": "284f771f-2c9a-4d73-9f4f-8492495a924d",
     "tooth": "github.com/engsr6982/DebugShape",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "info": {
         "name": "DebugShape",
         "description": "minecraft bedrock debug shape packet wrapper",
@@ -17,7 +17,7 @@
         {
             "platform": "win-x64",
             "dependencies": {
-                "github.com/LiteLDev/LeviLamina": "1.6.*"
+                "github.com/LiteLDev/LeviLamina": "1.7.*"
             },
             "assets": [
                 {
