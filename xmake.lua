@@ -41,7 +41,7 @@ target("DebugShape") -- Change this to your mod name.
     set_symbols("debug")
     add_headerfiles("src/(debug_shape/api/**.h)")
     add_files("src/**.cpp", "src/**.cc")
-    add_includedirs("src", "include")
+    add_includedirs("src")
 
     if has_config("test") then
         add_defines("DS_TEST")
