@@ -16,7 +16,13 @@
 #include "ll/api/command/CommandRegistrar.h"
 #include "ll/api/command/Overload.h"
 
+#include "mc/deps/core/math/Vec3.h"
+#include "mc/network/packet/DebugDrawerPacket.h"
+#include "mc/network/packet/ShapeDataPayload.h"
+#include "mc/network/packet/TextDataPayload.h"
+#include "mc/network/packet/cerealize/core/SerializationMode.h"
 #include "mc/platform/UUID.h"
+#include "mc/scripting/modules/minecraft/debugdrawer/ScriptDebugShapeType.h"
 #include "mc/server/commands/CommandOrigin.h"
 #include "mc/server/commands/CommandOriginType.h"
 #include "mc/server/commands/CommandOutput.h"
@@ -43,12 +49,13 @@ void addShape(std::unique_ptr<debug_shape::IDebugShape> shape) { gShapes.push_ba
 
 #define GET_PLAYER(ORI) *static_cast<Player*>(ORI.getEntity())
 
-#define RESOLVE_POS(ORI, POS) POS.getPosition(CommandVersion::CurrentVersion(), ORI, Vec3{0, 0, 0})
+#define RESOLVE_POS(ORI, POS) POS.getPosition(CommandVersion::CurrentVersion(), ORI, Vec3::ZERO())
 
 // commands
 struct TextParam {
     CommandPosition position;
     std::string     text;
+    int             mode;
 };
 
 struct SphereParam {
@@ -70,6 +77,56 @@ void DebugShapeTest::setup() {
         output.success("Cleared all shapes");
     });
 
+    // raw
+    cmd.overload<TextParam>()
+        .text("raw")
+        .required("position")
+        .required("text")
+        .required("mode")
+        .execute([](CommandOrigin const& origin, CommandOutput& output, TextParam const& data) {
+            CHECK_ORIGIN(origin);
+            auto pos = RESOLVE_POS(origin, data.position);
+
+            ShapeDataPayload payload{};
+            payload.mNetworkId = 1;
+            payload.mShapeType = ScriptModuleDebugUtilities::ScriptDebugShapeType::Text;
+            payload.mLocation  = pos;
+            TextDataPayload text{};
+            text.mText                = data.text;
+            payload.mExtraDataPayload = std::move(text);
+            DebugDrawerPacket packet{};
+            packet.mSerializationMode = SerializationMode::CerealOnly;
+            packet.mPayload->mShapes->push_back(std::move(payload));
+
+            switch (data.mode) {
+            case 0:
+                payload.mDimensionId = 0;
+                packet.sendToClients();
+                break;
+            case 1:
+                payload.mDimensionId = 0;
+                packet.sendTo(GET_PLAYER(origin));
+                break;
+            case 2:
+                payload.mDimensionId = 0;
+                packet.sendTo(pos, 0);
+                break;
+            case 3:
+                packet.sendToClients();
+                break;
+            case 4:
+                packet.sendTo(GET_PLAYER(origin));
+                break;
+            case 5:
+                packet.sendTo(pos, 0);
+                break;
+            case 6:
+                payload.mDimensionId = 0;
+                packet.sendTo(pos, 1);
+                break;
+            }
+        });
+
     // text
     cmd.overload<TextParam>()
         .text("text")
@@ -78,6 +135,7 @@ void DebugShapeTest::setup() {
         .execute([](CommandOrigin const& origin, CommandOutput& output, TextParam const& param) {
             auto pos   = RESOLVE_POS(origin, param.position);
             auto shape = debug_shape::IDebugText::create(pos, param.text);
+            shape->setDimensionId(0);
             shape->draw();
             addShape(std::move(shape));
             output.success("Added text shape");

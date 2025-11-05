@@ -8,12 +8,13 @@ namespace debug_shape::detail {
 class DebugShapeImpl : public virtual IDebugShape {
 protected:
     ShapeDataPayload payload_{};
-    friend class DebugShapeDrawerImpl;
 
 public:
     DS_DISABLE_COPY(DebugShapeImpl);
     explicit DebugShapeImpl(ShapeType type, Vec3 const& location);
     ~DebugShapeImpl() override;
+
+    [[nodiscard]] ShapeDataPayload const& getPayload() const;
 
     ShapeID                   getShapeID() const override;
     ShapeType                 getShapeType() const override;

@@ -23,6 +23,8 @@ DebugShapeImpl::DebugShapeImpl(ShapeType type, Vec3 const& location) {
 }
 DebugShapeImpl::~DebugShapeImpl() { DebugShapeImpl::remove(); }
 
+ShapeDataPayload const& DebugShapeImpl::getPayload() const { return payload_; }
+
 ShapeID DebugShapeImpl::getShapeID() const { return {payload_.mNetworkId}; }
 
 ShapeType DebugShapeImpl::getShapeType() const { return static_cast<ShapeType>(*payload_.mShapeType.get()); }
@@ -53,20 +55,20 @@ DimensionType DebugShapeImpl::getDimensionId() const { return payload_.mDimensio
 
 void DebugShapeImpl::setDimensionId(DimensionType d) { payload_.mDimensionId = d; }
 
-void DebugShapeImpl::draw() const { DebugShapeDrawerImpl::getInstance().drawShape(this); }
+void DebugShapeImpl::draw() const { DebugShapeDrawerImpl::getInstance().drawShape(*this); }
 
-void DebugShapeImpl::draw(Player& player) const { DebugShapeDrawerImpl::getInstance().drawShape(this, player); }
+void DebugShapeImpl::draw(Player& player) const { DebugShapeDrawerImpl::getInstance().drawShape(*this, player); }
 
 void DebugShapeImpl::draw(DimensionType dimension) const {
-    // TODO: impl
+    DebugShapeDrawerImpl::getInstance().drawShape(*this, dimension);
 }
 
-void DebugShapeImpl::remove() const { DebugShapeDrawerImpl::getInstance().removeShape(this); }
+void DebugShapeImpl::remove() const { DebugShapeDrawerImpl::getInstance().removeShape(*this); }
 
-void DebugShapeImpl::remove(Player& player) const { DebugShapeDrawerImpl::getInstance().removeShape(this, player); }
+void DebugShapeImpl::remove(Player& player) const { DebugShapeDrawerImpl::getInstance().removeShape(*this, player); }
 
 void DebugShapeImpl::remove(DimensionType dimension) const {
-    // TODO: impl
+    DebugShapeDrawerImpl::getInstance().removeShape(*this, dimension);
 }
 
 void DebugShapeImpl::update() const { draw(); }

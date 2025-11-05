@@ -1,17 +1,53 @@
 #include "DebugShapeDrawerImpl.h"
 
-#include "debug_shape/ModEntry.h"
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/deps/core/math/Vec3.h"
 #include "shape/DebugShapeImpl.h"
 
+#include <functional>
 #include <mc/network/packet/DebugDrawerPacket.h>
 #include <mc/network/packet/ShapeDataPayload.h>
 #include <mc/world/level/BlockPos.h>
+#include <optional>
+#include <vector>
 
 namespace debug_shape {
 
 IDebugShapeDrawer& IDebugShapeDrawer::getInstance() { return detail::DebugShapeDrawerImpl::getInstance(); }
 
 namespace detail {
+
+void drawer(
+    std::function<std::vector<ShapeDataPayload>()> const& provider,
+    Player*                                               player,
+    std::optional<DimensionType>                          dimension
+) {
+    auto payloads = provider();
+    if (payloads.empty()) {
+        return;
+    }
+
+    DebugDrawerPacket packet{};
+    packet.setSerializationMode(SerializationMode::CerealOnly);
+
+    auto& shapes = packet.mPayload->mShapes.get();
+    shapes.reserve(payloads.size());
+    shapes = std::move(payloads);
+
+    if (player) {
+        packet.sendTo(*player);
+    } else if (dimension) {
+        packet.sendTo(shapes[0].mLocation->value_or(Vec3::ZERO()), *dimension);
+    } else {
+        packet.sendToClients();
+    }
+}
+
+ShapeDataPayload emptyCloneWithId(ShapeDataPayload const& src) {
+    ShapeDataPayload payload{};
+    payload.mNetworkId = src.mNetworkId;
+    return payload;
+}
 
 DebugShapeDrawerImpl::DebugShapeDrawerImpl()  = default;
 DebugShapeDrawerImpl::~DebugShapeDrawerImpl() = default;
@@ -21,64 +57,57 @@ DebugShapeDrawerImpl& DebugShapeDrawerImpl::getInstance() {
     return instance;
 }
 
-void DebugShapeDrawerImpl::drawer(std::vector<IDebugShape const*> const& shapes, Player* player) {
-    DebugDrawerPacket packet{};
-    packet.mPayload->mShapes->reserve(shapes.size());
-    for (auto shape : shapes) {
-        auto parent = dynamic_cast<DebugShapeImpl const*>(shape);
-        if (!parent) {
-            ModEntry::getInstance().getSelf().getLogger().error("Failed to cast shape to DebugShapeImpl");
-        }
-        packet.mPayload->mShapes->push_back(parent->payload_);
-    }
-    if (player) {
-        packet.sendTo(*player);
-    } else if (shapes.size() >= 1) {
-        packet.sendTo(shapes[0]->getLocation().value_or(Vec3::ZERO()), shapes[0]->getDimensionId());
-    }
+void DebugShapeDrawerImpl::processShapes(
+    std::vector<IDebugShape const*> const& shapes,
+    Player*                                player,
+    std::optional<DimensionType>           dim,
+    bool                                   remove
+) {
+    drawer(
+        [&]() {
+            std::vector<ShapeDataPayload> payloads;
+            payloads.reserve(shapes.size());
+            for (auto const* shape : shapes) {
+                if (auto* parent = dynamic_cast<DebugShapeImpl const*>(shape)) {
+                    payloads.push_back(remove ? emptyCloneWithId(parent->getPayload()) : parent->getPayload());
+                }
+            }
+            return payloads;
+        },
+        player,
+        dim
+    );
 }
 
-void DebugShapeDrawerImpl::deleter(std::vector<IDebugShape const*> const& shapes, Player* player) {
-    static auto copyEmpty = [](ShapeDataPayload const& payload) {
-        ShapeDataPayload data_payload{};
-        data_payload.mNetworkId = payload.mNetworkId;
-        return data_payload;
-    };
-    DebugDrawerPacket packet{};
-    packet.mPayload->mShapes->reserve(shapes.size());
-    for (auto shape : shapes) {
-        auto parent = dynamic_cast<DebugShapeImpl const*>(shape);
-        if (!parent) {
-            ModEntry::getInstance().getSelf().getLogger().error("Failed to cast shape to DebugShapeImpl");
-        }
-        packet.mPayload->mShapes->push_back(copyEmpty(parent->payload_));
-    }
-    if (player) {
-        packet.sendTo(*player);
-    } else if (shapes.size() >= 1) {
-        packet.sendTo(shapes[0]->getLocation().value_or(Vec3::ZERO()), shapes[0]->getDimensionId());
-    }
+
+void DebugShapeDrawerImpl::drawShape(IDebugShape const& shape) { drawShapes({&shape}); }
+void DebugShapeDrawerImpl::drawShape(IDebugShape const& shape, Player& player) { drawShapes({&shape}, player); }
+void DebugShapeDrawerImpl::drawShape(IDebugShape const& shape, DimensionType dim) { drawShapes({&shape}, dim); }
+
+void DebugShapeDrawerImpl::drawShapes(std::vector<IDebugShape const*> const& shapes) {
+    processShapes(shapes, nullptr, std::nullopt, false);
+}
+void DebugShapeDrawerImpl::drawShapes(std::vector<IDebugShape const*> const& shapes, Player& player) {
+    processShapes(shapes, &player, std::nullopt, false);
+}
+void DebugShapeDrawerImpl::drawShapes(std::vector<IDebugShape const*> const& shapes, DimensionType dim) {
+    processShapes(shapes, nullptr, dim, false);
 }
 
-void DebugShapeDrawerImpl::drawShape(IDebugShape const* shape) { drawer({shape}, nullptr); }
+void DebugShapeDrawerImpl::removeShape(IDebugShape const& shape) { removeShapes({&shape}); }
+void DebugShapeDrawerImpl::removeShape(IDebugShape const& shape, Player& player) { removeShapes({&shape}, player); }
+void DebugShapeDrawerImpl::removeShape(IDebugShape const& shape, DimensionType dim) { removeShapes({&shape}, dim); }
 
-void DebugShapeDrawerImpl::removeShape(IDebugShape const* shape) { deleter({shape}, nullptr); }
-
-void DebugShapeDrawerImpl::drawShape(const IDebugShape* shape, Player& player) { drawer({shape}, &player); }
-
-void DebugShapeDrawerImpl::removeShape(const IDebugShape* shape, Player& player) { deleter({shape}, &player); }
-
-void DebugShapeDrawerImpl::drawShapes(const std::vector<IDebugShape const*>& shapes) { drawer(shapes, nullptr); }
-
-void DebugShapeDrawerImpl::drawShapes(const std::vector<IDebugShape const*>& shapes, Player& player) {
-    drawer(shapes, &player);
+void DebugShapeDrawerImpl::removeShapes(std::vector<IDebugShape const*> const& shapes) {
+    processShapes(shapes, nullptr, std::nullopt, true);
+}
+void DebugShapeDrawerImpl::removeShapes(std::vector<IDebugShape const*> const& shapes, Player& player) {
+    processShapes(shapes, &player, std::nullopt, true);
+}
+void DebugShapeDrawerImpl::removeShapes(std::vector<IDebugShape const*> const& shapes, DimensionType dim) {
+    processShapes(shapes, nullptr, dim, true);
 }
 
-void DebugShapeDrawerImpl::removeShapes(const std::vector<IDebugShape const*>& shapes) { deleter(shapes, nullptr); }
-
-void DebugShapeDrawerImpl::removeShapes(const std::vector<IDebugShape const*>& shapes, Player& player) {
-    deleter(shapes, &player);
-}
 
 } // namespace detail
 

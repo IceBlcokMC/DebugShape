@@ -49,6 +49,6 @@ target("DebugShape") -- Change this to your mod name.
         add_files("tests/**.cc")
     end
 
-    if is_plat("windows") and is_mode("release") then
+    if is_plat("windows") then
         add_cxxflags("/wd4250", {force = true}) -- ignore warning C4250
     end

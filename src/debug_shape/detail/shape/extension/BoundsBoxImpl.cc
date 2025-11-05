@@ -76,7 +76,7 @@ void BoundsBoxImpl::draw(Player& player) const {
 }
 
 void BoundsBoxImpl::draw(DimensionType dimension) const {
-    // TODO: impl
+    DebugShapeDrawerImpl::getInstance().drawShapes(impl_->asVector(), dimension);
 }
 
 void BoundsBoxImpl::remove() const { DebugShapeDrawerImpl::getInstance().removeShapes(impl_->asVector()); }
@@ -86,7 +86,7 @@ void BoundsBoxImpl::remove(Player& player) const {
 }
 
 void BoundsBoxImpl::remove(DimensionType dimension) const {
-    // TODO: impl
+    DebugShapeDrawerImpl::getInstance().removeShapes(impl_->asVector(), dimension);
 }
 
 void BoundsBoxImpl::update() const { draw(); }
