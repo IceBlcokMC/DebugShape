@@ -69,7 +69,7 @@ struct LineParam {
 };
 
 void DebugShapeTest::setup() {
-    auto& cmd = ll::command::CommandRegistrar::getInstance().getOrCreateCommand("shape", "Minecraft DebugShape");
+    auto& cmd = ll::command::CommandRegistrar::getInstance(false).getOrCreateCommand("shape", "Minecraft DebugShape");
 
     // clear
     cmd.overload().text("clear").execute([](CommandOrigin const& /* origin */, CommandOutput& output) {
@@ -96,7 +96,7 @@ void DebugShapeTest::setup() {
             payload.mExtraDataPayload = std::move(text);
             DebugDrawerPacket packet{};
             packet.mSerializationMode = SerializationMode::CerealOnly;
-            packet.mPayload->mShapes->push_back(std::move(payload));
+            packet.mShapes->push_back(std::move(payload));
 
             switch (data.mode) {
             case 0:

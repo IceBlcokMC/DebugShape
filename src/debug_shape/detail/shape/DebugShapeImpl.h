@@ -16,21 +16,21 @@ public:
 
     [[nodiscard]] ShapeDataPayload const& getPayload() const;
 
-    ShapeID                   getShapeID() const override;
-    ShapeType                 getShapeType() const override;
-    std::optional<Vec3>       getLocation() const override;
-    void                      setLocation(const Vec3& loc) override;
-    std::optional<Vec3>       getRotation() const override;
-    void                      setRotation(std::optional<Vec3> rot) override;
-    std::optional<float>      getScale() const override;
-    void                      setScale(std::optional<float> s) override;
-    std::optional<mce::Color> getColor() const override;
-    void                      setColor(std::optional<mce::Color> c) override;
-    bool                      hasDuration() const override;
-    std::optional<float>      getTotalTimeLeft() const override;
-    void                      setTotalTimeLeft(std::optional<float> t) override;
-    DimensionType             getDimensionId() const override;
-    void                      setDimensionId(DimensionType d) override;
+    ShapeID                      getShapeID() const override;
+    ShapeType                    getShapeType() const override;
+    std::optional<Vec3>          getLocation() const override;
+    void                         setLocation(const Vec3& loc) override;
+    std::optional<Vec3>          getRotation() const override;
+    void                         setRotation(std::optional<Vec3> rot) override;
+    std::optional<float>         getScale() const override;
+    void                         setScale(std::optional<float> s) override;
+    std::optional<mce::Color>    getColor() const override;
+    void                         setColor(std::optional<mce::Color> c) override;
+    bool                         hasDuration() const override;
+    std::optional<float>         getTotalTimeLeft() const override;
+    void                         setTotalTimeLeft(std::optional<float> t) override;
+    std::optional<DimensionType> getDimensionId() const override;
+    void                         setDimensionId(std::optional<DimensionType> d) override;
 
     // impl IDrawer
     void draw() const override;

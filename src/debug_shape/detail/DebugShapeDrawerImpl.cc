@@ -30,7 +30,7 @@ void drawer(
     DebugDrawerPacket packet{};
     packet.setSerializationMode(SerializationMode::CerealOnly);
 
-    auto& shapes = packet.mPayload->mShapes.get();
+    auto& shapes = packet.mShapes.get();
     shapes.reserve(payloads.size());
     shapes = std::move(payloads);
 

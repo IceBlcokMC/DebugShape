@@ -119,8 +119,8 @@ void                 BoundsBoxImpl::setTotalTimeLeft(std::optional<float> t) {
     }
 }
 
-DimensionType BoundsBoxImpl::getDimensionId() const { return impl_->lines_[0]->getDimensionId(); }
-void          BoundsBoxImpl::setDimensionId(DimensionType d) {
+std::optional<DimensionType> BoundsBoxImpl::getDimensionId() const { return impl_->lines_[0]->getDimensionId(); }
+void          BoundsBoxImpl::setDimensionId(std::optional<DimensionType> d) {
     for (auto& line : impl_->lines_) {
         line->setDimensionId(d);
     }

@@ -51,9 +51,9 @@ std::optional<float> DebugShapeImpl::getTotalTimeLeft() const { return payload_.
 
 void DebugShapeImpl::setTotalTimeLeft(std::optional<float> t) { payload_.mTimeLeftTotalSec = t; }
 
-DimensionType DebugShapeImpl::getDimensionId() const { return payload_.mDimensionId; }
+std::optional<DimensionType> DebugShapeImpl::getDimensionId() const { return payload_.mDimensionId; }
 
-void DebugShapeImpl::setDimensionId(DimensionType d) { payload_.mDimensionId = d; }
+void DebugShapeImpl::setDimensionId(std::optional<DimensionType> d) { payload_.mDimensionId = d; }
 
 void DebugShapeImpl::draw() const { DebugShapeDrawerImpl::getInstance().drawShape(*this); }
 

@@ -29,9 +29,9 @@ public:
     virtual void setTotalTimeLeft(std::optional<float> t) = 0;
 
     // v1.21.120
-    virtual DimensionType getDimensionId() const = 0;
+    virtual std::optional<DimensionType> getDimensionId() const = 0;
 
-    virtual void setDimensionId(DimensionType d) = 0;
+    virtual void setDimensionId(std::optional<DimensionType> d) = 0;
 };
 
 } // namespace debug_shape::extension

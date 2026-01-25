@@ -6,9 +6,9 @@ add_repositories("levimc-repo https://github.com/LiteLDev/xmake-repo.git")
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 if is_config("target_type", "server") then
-    add_requires("levilamina 1.7.0", {configs = {target_type = "server"}})
+    add_requires("levilamina 1.9.0", {configs = {target_type = "server"}})
 else
-    add_requires("levilamina 1.4.1", {configs = {target_type = "client"}})
+    add_requires("levilamina 1.9.0", {configs = {target_type = "client"}})
 end
 
 add_requires("levibuildscript")
@@ -51,4 +51,10 @@ target("DebugShape") -- Change this to your mod name.
 
     if is_plat("windows") then
         add_cxxflags("/wd4250", {force = true}) -- ignore warning C4250
+    end
+
+    if is_config("target_type", "server") then
+        add_defines("LL_PLAT_S")
+    else
+        add_defines("LL_PLAT_C")
     end
