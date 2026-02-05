@@ -9,9 +9,12 @@ minecraft bedrock debug shape packet wrapper
 - xmake.lua
 
 ```lua
-add_repositories("engsr6982-repo https://github.com/engsr6982/xmake-repo.git")
+add_repositories("iceblcokmc https://github.com/IceBlcokMC/xmake-repo.git")
 
 add_requires("debug_shape 0.1.0")
+
+target("YourProject")
+    add_packages("debug_shape")
 ```
 
 ```cpp
