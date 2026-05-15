@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-5-15
+
+- 添加脚本绑定，支持在 LegacyScriptEngine-QuickJS (>=0.18.x) 中使用 DebugShape
+  Add script binding to support using DebugShape in LegacyScriptEngine-QuickJS (>=0.18.x)
+
 ## [0.7.0] - 2026-04-07
 
 - supported bedrock server v1.26.10 (levilamina v26.10.x)

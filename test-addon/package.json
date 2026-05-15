@@ -1,0 +1,6 @@
+{
+  "name": "test-addon",
+  "devDependencies": {
+    "@levimc-lse/types": "^2.18.7"
+  }
+}

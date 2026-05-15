@@ -1,0 +1,13 @@
+{
+    "entry": "bootstraps.js",
+    "name": "test-addon",
+    "type": "lse-quickjs",
+    "dependencies": [
+        {
+            "name": "legacy-script-engine-quickjs"
+        },
+        {
+            "name": "DebugShape"
+        }
+    ]
+}
