@@ -1,5 +1,6 @@
 #pragma once
 #include <mc/_HeaderOutputPredefine.h>
+#include <mc/world/level/dimension/DimensionType.h>
 
 class Player;
 

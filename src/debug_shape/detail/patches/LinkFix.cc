@@ -1,9 +1,1 @@
-#include "mc/network/packet/ShapeDataPayload.h"
-ShapeDataPayload::ShapeDataPayload() = default;
-
-#include "mc/network/packet/TextDataPayload.h"
-TextDataPayload::TextDataPayload() = default;
-TextDataPayload::TextDataPayload(TextDataPayload const& cp) { mText = cp.mText; };
-
-#include "mc/network/packet/DebugDrawerPacketPayload.h"
-// DebugDrawerPacketPayload::DebugDrawerPacketPayload() = default;
+// No link shims are needed for the LL 26.20 primitive-shapes payload headers.

@@ -3,8 +3,6 @@
 #include "debug_shape/api/shape/IDebugLine.h"
 #include "debug_shape/detail/DebugShapeDrawerImpl.h"
 
-#include <mc/deps/core/utility/AutomaticID.h>
-
 namespace debug_shape {
 
 std::unique_ptr<extension::IBoundsBox> extension::IBoundsBox::create(AABB const& bounds, mce::Color const& color) {

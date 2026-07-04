@@ -1,20 +1,20 @@
 #pragma once
 #include "debug_shape/api/shape/IDebugShape.h"
 
-#include "mc/network/packet/ShapeDataPayload.h"
+#include "mc/network/packet/PrimitiveShapeDataPayload.h"
 
 namespace debug_shape::detail {
 
 class DebugShapeImpl : public virtual IDebugShape {
 protected:
-    ShapeDataPayload payload_{};
+    PrimitiveShapeDataPayload payload_{};
 
 public:
     DS_DISABLE_COPY(DebugShapeImpl);
     explicit DebugShapeImpl(ShapeType type, Vec3 const& location);
     ~DebugShapeImpl() override;
 
-    [[nodiscard]] ShapeDataPayload const& getPayload() const;
+    [[nodiscard]] PrimitiveShapeDataPayload const& getPayload() const;
 
     ShapeID                      getShapeID() const override;
     ShapeType                    getShapeType() const override;

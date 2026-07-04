@@ -5,8 +5,8 @@
 #include "shape/DebugShapeImpl.h"
 
 #include <functional>
-#include <mc/network/packet/DebugDrawerPacket.h>
-#include <mc/network/packet/ShapeDataPayload.h>
+#include <mc/network/packet/PrimitiveShapeDataPayload.h>
+#include <mc/network/packet/PrimitiveShapesPacket.h>
 #include <mc/world/level/BlockPos.h>
 #include <optional>
 #include <vector>
@@ -18,16 +18,16 @@ IDebugShapeDrawer& IDebugShapeDrawer::getInstance() { return detail::DebugShapeD
 namespace detail {
 
 void drawer(
-    std::function<std::vector<ShapeDataPayload>()> const& provider,
-    Player*                                               player,
-    std::optional<DimensionType>                          dimension
+    std::function<std::vector<PrimitiveShapeDataPayload>()> const& provider,
+    Player*                                                        player,
+    std::optional<DimensionType>                                   dimension
 ) {
     auto payloads = provider();
     if (payloads.empty()) {
         return;
     }
 
-    DebugDrawerPacket packet{};
+    PrimitiveShapesPacket packet{};
     packet.setSerializationMode(SerializationMode::CerealOnly);
 
     auto& shapes = packet.mShapes.get();
@@ -43,8 +43,8 @@ void drawer(
     }
 }
 
-ShapeDataPayload emptyCloneWithId(ShapeDataPayload const& src) {
-    ShapeDataPayload payload{};
+PrimitiveShapeDataPayload emptyCloneWithId(PrimitiveShapeDataPayload const& src) {
+    PrimitiveShapeDataPayload payload{};
     payload.mNetworkId = src.mNetworkId;
     return payload;
 }
@@ -65,7 +65,7 @@ void DebugShapeDrawerImpl::processShapes(
 ) {
     drawer(
         [&]() {
-            std::vector<ShapeDataPayload> payloads;
+            std::vector<PrimitiveShapeDataPayload> payloads;
             payloads.reserve(shapes.size());
             for (auto const* shape : shapes) {
                 if (auto* parent = dynamic_cast<DebugShapeImpl const*>(shape)) {
