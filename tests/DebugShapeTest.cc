@@ -17,12 +17,12 @@
 #include "ll/api/command/Overload.h"
 
 #include "mc/deps/core/math/Vec3.h"
-#include "mc/network/packet/DebugDrawerPacket.h"
-#include "mc/network/packet/ShapeDataPayload.h"
+#include "mc/network/packet/PrimitiveShapeDataPayload.h"
+#include "mc/network/packet/PrimitiveShapesPacket.h"
 #include "mc/network/packet/TextDataPayload.h"
 #include "mc/network/packet/cerealize/core/SerializationMode.h"
 #include "mc/platform/UUID.h"
-#include "mc/scripting/modules/minecraft/debugdrawer/ScriptDebugShapeType.h"
+#include "mc/scripting/modules/minecraft/primitiveshapes/ScriptPrimitiveShapeType.h"
 #include "mc/server/commands/CommandOrigin.h"
 #include "mc/server/commands/CommandOriginType.h"
 #include "mc/server/commands/CommandOutput.h"
@@ -87,14 +87,14 @@ void DebugShapeTest::setup() {
             CHECK_ORIGIN(origin);
             auto pos = RESOLVE_POS(origin, data.position);
 
-            ShapeDataPayload payload{};
+            PrimitiveShapeDataPayload payload{};
             payload.mNetworkId = 1;
-            payload.mShapeType = ScriptModuleDebugUtilities::ScriptDebugShapeType::Text;
+            payload.mShapeType = ScriptModuleMinecraft::ScriptPrimitiveShapeType::Text;
             payload.mLocation  = pos;
             TextDataPayload text{};
             text.mText                = data.text;
             payload.mExtraDataPayload = std::move(text);
-            DebugDrawerPacket packet{};
+            PrimitiveShapesPacket packet{};
             packet.mSerializationMode = SerializationMode::CerealOnly;
             packet.mShapes->push_back(std::move(payload));
 

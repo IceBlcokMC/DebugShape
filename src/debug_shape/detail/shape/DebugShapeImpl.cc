@@ -19,11 +19,11 @@ DebugShapeImpl::DebugShapeImpl(ShapeType type, Vec3 const& location) {
     }
 
     payload_.mLocation  = location;
-    payload_.mShapeType = static_cast<ScriptModuleDebugUtilities::ScriptDebugShapeType>(type);
+    payload_.mShapeType = static_cast<ScriptModuleMinecraft::ScriptPrimitiveShapeType>(type);
 }
 DebugShapeImpl::~DebugShapeImpl() { DebugShapeImpl::remove(); }
 
-ShapeDataPayload const& DebugShapeImpl::getPayload() const { return payload_; }
+PrimitiveShapeDataPayload const& DebugShapeImpl::getPayload() const { return payload_; }
 
 ShapeID DebugShapeImpl::getShapeID() const { return {payload_.mNetworkId}; }
 
