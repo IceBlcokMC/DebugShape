@@ -68,8 +68,8 @@ void DebugShapeDrawerImpl::processShapes(
             std::vector<PrimitiveShapeDataPayload> payloads;
             payloads.reserve(shapes.size());
             for (auto const* shape : shapes) {
-                if (auto* parent = dynamic_cast<DebugShapeImpl const*>(shape)) {
-                    payloads.push_back(remove ? emptyCloneWithId(parent->getPayload()) : parent->getPayload());
+                if (auto const* payload = shape->getPayloadForDrawer()) {
+                    payloads.push_back(remove ? emptyCloneWithId(*payload) : *payload);
                 }
             }
             return payloads;

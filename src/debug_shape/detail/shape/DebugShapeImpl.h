@@ -16,6 +16,11 @@ public:
 
     [[nodiscard]] PrimitiveShapeDataPayload const& getPayload() const;
 
+private:
+    PrimitiveShapeDataPayload const* getPayloadForDrawer() const override { return &payload_; }
+
+public:
+
     ShapeID                      getShapeID() const override;
     ShapeType                    getShapeType() const override;
     std::optional<Vec3>          getLocation() const override;

@@ -9,8 +9,13 @@
 #include <memory>
 #include <optional>
 
+struct PrimitiveShapeDataPayload;
 
 namespace debug_shape {
+
+namespace detail {
+class DebugShapeDrawerImpl;
+}
 
 
 /**
@@ -19,6 +24,11 @@ namespace debug_shape {
  * https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/debug-utilities/debugshape?view=minecraft-bedrock-experimental
  */
 class IDebugShape : public virtual IDrawer {
+private:
+    virtual PrimitiveShapeDataPayload const* getPayloadForDrawer() const { return nullptr; }
+
+    friend class detail::DebugShapeDrawerImpl;
+
 public:
     virtual ShapeID getShapeID() const = 0;
 
