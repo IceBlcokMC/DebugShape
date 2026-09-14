@@ -20,6 +20,10 @@ static_assert(ShapeType::Sphere == ScriptModuleMinecraft::ScriptPrimitiveShapeTy
 static_assert(ShapeType::Circle == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Circle);
 static_assert(ShapeType::Text == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Text);
 static_assert(ShapeType::Arrow == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Arrow);
+static_assert(ShapeType::Cylinder == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Cylinder);
+static_assert(ShapeType::Pyramid == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Pyramid);
+static_assert(ShapeType::Ellipsoid == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Ellipsoid);
+static_assert(ShapeType::Cone == ScriptModuleMinecraft::ScriptPrimitiveShapeType::Cone);
 static_assert(ShapeType::NumShapeTypes == ScriptModuleMinecraft::ScriptPrimitiveShapeType::NumShapeTypes);
 
 } // namespace debug_shape
